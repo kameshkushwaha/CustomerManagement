@@ -22,7 +22,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
    private int id;
-   private String furstName;
+   private String firstName;
    private String lastName;
    private String location;
    private LocalDate birthDate;

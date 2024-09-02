@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aspectj.weaver.loadtime.Agent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,6 +72,28 @@ public class CustomerConrolar {
 		}
 	}
 
+     @PutMapping("/update/{id}")
+	public ResponseEntity<?> updateUserById(@PathVariable Integer id, @RequestBody Customer userDetail) {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		try {
+            Customer user = customerService.findById(id);
+			user.setFirstName(userDetail.getFirstName());
+			user.setLastName(userDetail.getLastName());
+			user.setBirthDate(userDetail.getBirthDate());
+			user.setLocation(userDetail.getLocation());
+            customerService.save(user);
+			map.put("status", 1);
+			map.put("Massage", "Data has been updated sucessfully");
+			map.put("data", customerService.findById(id));
+			
 
-    
+			return new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception ex) {
+			map.clear();
+			map.put("status", 0);
+			map.put("message", "Data is not found");
+			return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+		}
+	}
+
 }
